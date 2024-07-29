@@ -21,6 +21,6 @@ export default defineNuxtConfig({
   },
 
   components: [
-    { path: '~/src/components', pathPrefix: false }
+    { path: '~/components', pathPrefix: false }
   ]
 })
