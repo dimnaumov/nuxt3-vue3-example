@@ -33,7 +33,7 @@ const queryString = computed(() => {
     ...WEATHER_FORECAST_REQUEST_OPTIONS.parameters,
     ...{
       cnt: forecastPeriodSelected.value,
-    }
+    },
   });
 });
 
@@ -55,7 +55,7 @@ const url = computed(() => `${WEATHER_SERVICE_BASE_URL}${WEATHER_FORECAST_REQUES
 const { data, status, refresh } = await useFetch<ProxyResponse>(PROXY_URL, {
   query: { url },
 
-  watch: [ url ]
+  watch: [ url ],
 });
 
 const weatherForecast: ComputedRef<WeatherForecastContents | null> = computed(() => {
@@ -124,7 +124,9 @@ const weatherForecast: ComputedRef<WeatherForecastContents | null> = computed(()
           по ощущению: {{ Math.round(itemForecast.main.feels_like) }}°C
         </p>
 
-        <p v-for="item in itemForecast.weather" :key="item.id">
+        <p
+          v-for="item in itemForecast.weather"
+          :key="item.id">
           {{ item.description }}
         </p>
       </div>

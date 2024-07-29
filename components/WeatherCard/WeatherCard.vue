@@ -23,7 +23,9 @@ defineProps<Props>();
     </div>
 
     <div>
-      <p v-for="item in data.weather" :key="item.id">
+      <p
+        v-for="item in data.weather"
+        :key="item.id">
         {{ item.description }}
       </p>
     </div>

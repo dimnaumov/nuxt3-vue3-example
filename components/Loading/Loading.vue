@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.loading">
-    <div :class="$style.ldsRing" class="text-slate-200">
+    <div
+      :class="$style.ldsRing"
+      class="text-slate-200">
       <div/>
       <div/>
       <div/>

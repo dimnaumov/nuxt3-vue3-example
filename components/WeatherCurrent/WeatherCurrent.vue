@@ -6,7 +6,7 @@ import type { ProxyResponse, WeatherCurrentContents } from '../Weather/types';
 const queryString = computed(() =>
   getQueryString({
     ...WEATHER_CURRENT_REQUEST_OPTIONS.parameters,
-  })
+  }),
 );
 
 const url = computed(() => `${WEATHER_SERVICE_BASE_URL}${WEATHER_CURRENT_REQUEST_OPTIONS.url}?${queryString.value}`);
@@ -19,9 +19,9 @@ const { data, refresh, status } = await useAsyncData<ProxyResponse>(
       method: 'GET',
       params: {
         url: url.value,
-      }
-    }
-  )
+      },
+    },
+  ),
 );
 
 // const { data, refresh, status } = await useFetch<ProxyResponse>(PROXY_URL, {
@@ -61,7 +61,13 @@ const arrowContainerStyles = computed(() => {
           Погода: {{ weatherCurrent.name }}
         </p>
 
-        <UButton size="xl" variant="outline" @click="refresh()">Обновить</UButton>
+        <UButton
+          size="xl"
+          variant="outline"
+          @click="refresh()"
+        >
+          Обновить
+        </UButton>
       </div>
     </template>
 
@@ -88,7 +94,9 @@ const arrowContainerStyles = computed(() => {
           {{ item.description }}
         </p>
 
-        <div :class="$style.icon" class="border-slate-200 rounded border">
+        <div
+          :class="$style.icon"
+          class="border-slate-200 rounded border">
           <img
             :class="$style.image"
             :src="`https://openweathermap.org/img/wn/${item.icon}@2x.png`"
@@ -98,7 +106,9 @@ const arrowContainerStyles = computed(() => {
       </div>
     </div>
 
-    <div :class="$style.wind" class="border-slate-200 rounded border">
+    <div
+      :class="$style.wind"
+      class="border-slate-200 rounded border">
       <div
         :class="$style.arrowContainer"
         :style="arrowContainerStyles"
