@@ -17,10 +17,10 @@ export default defineNuxtConfig({
   modules: ["@nuxt/eslint", "@nuxt/ui"],
 
   eslint: {
-    checker: true
+    checker: true,
   },
 
   components: [
-    { path: '~/components', pathPrefix: false }
-  ]
+    { path: '~/components', pathPrefix: false },
+  ],
 })

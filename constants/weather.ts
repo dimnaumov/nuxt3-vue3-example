@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type {
   WeatherCurrentRequestOptions,
-  WeatherForecastRequestOptions
+  WeatherForecastRequestOptions,
 } from "~/components/Weather/types";
 
 const coordUstUren = {

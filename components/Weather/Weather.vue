@@ -6,11 +6,11 @@ import type { WeatherTabItem } from './types';
 const items: WeatherTabItem[] = [{
   slot: 'current',
   name: 'current',
-  label: 'Текущая погода'
+  label: 'Текущая погода',
 }, {
   slot: 'forecast',
   name: 'forecast',
-  label: 'Прогноз погоды'
+  label: 'Прогноз погоды',
 }];
 
 
