@@ -14,7 +14,6 @@ const coordUlyanovsk = {
   lon: 48.4031,
 };
 
-// export const PROXY_URL = 'http://api.allorigins.win/get?url=';
 export const PROXY_URL = 'http://api.allorigins.win/get';
 
 export const WEATHER_SERVICE_BASE_URL = 'http://api.openweathermap.org/data/2.5/';
