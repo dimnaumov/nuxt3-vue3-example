@@ -41,23 +41,26 @@ const arrowContainerStyles = computed(() => {
     transform: `rotate(${weatherCurrent.value?.wind.deg + 180}deg)`,
     transformOrigin: 'center center',
   };
-})
-
+});
 </script>
 
 <template>
-  <pre>
+  <!-- <pre>
     {{ weatherCurrent }}
-  </pre>
+  </pre> -->
 
-  <!-- <UCard v-if="status === 'pending'">
+  <UCard v-if="status === 'pending'">
     <Loading />
-  </UCard> -->
+  </UCard>
 
-  <UCard v-if="weatherCurrent">
+  <UCard v-else-if="status === 'error'">
+    ERROR
+  </UCard>
+
+  <UCard v-else-if="weatherCurrent">
     <template #header>
       <div :class="$style.header">
-        <p class="text-4xl">
+        <p class="text-2xl flex justify-center items-center">
           Погода: {{ weatherCurrent.name }}
         </p>
 
@@ -71,59 +74,60 @@ const arrowContainerStyles = computed(() => {
       </div>
     </template>
 
-    <div class="currentWeather">
-      <p>
-        {{ weatherCurrent.dt }}
-      </p>
-
-      <p class="text-8xl font-medium">
-        {{ Math.round(weatherCurrent.main.temp) }}°C
-      </p>
-
-      <p>
-        по ощущению: {{ Math.round(weatherCurrent.main.feels_like) }}°C
-      </p>
-    </div>
-
-    <div :class="$style.weather">
-      <div
-        v-for="item in weatherCurrent.weather"
-        :key="item.id"
-      >
+    <div class="flex flex-col">
+      <div class="currentWeather">
         <p>
-          {{ item.description }}
+          {{ weatherCurrent.dt }}
         </p>
 
-        <div
-          :class="$style.icon"
-          class="border-slate-200 rounded border">
-          <img
-            :class="$style.image"
-            :src="`https://openweathermap.org/img/wn/${item.icon}@2x.png`"
-            :alt="item.description"
+        <p class="text-8xl font-medium">
+          {{ Math.round(weatherCurrent.main.temp) }}°C
+        </p>
+      </div>
+
+      <div
+        class="flex items-center justify-center border-slate-200 rounded border self-start"
+      >
+        <template
+          v-for="item in weatherCurrent.weather"
+          :key="item.id"
+        >
+          <div
+            :class="$style.icon"
           >
-        </div>
-      </div>
-    </div>
+            <img
+              class="brightness-75"
+              :src="`https://openweathermap.org/img/wn/${item.icon}@2x.png`"
+              :alt="item.description"
+            >
+          </div>
 
-    <div
-      :class="$style.wind"
-      class="border-slate-200 rounded border">
+          <p class="p-1.5 text-sm">
+            {{ item.description }}
+          </p>
+        </template>
+      </div>
+
       <div
-        :class="$style.arrowContainer"
-        :style="arrowContainerStyles"
+        :class="$style.wind"
+        class="border-slate-200 rounded border self-start"
       >
-        <span :class="$style.upArrow" />
-      </div>
+        <div
+          :class="$style.arrowContainer"
+          :style="arrowContainerStyles"
+        >
+          <span class="text-3xl text-slate-500">&#8593;</span>
+        </div>
 
-      <div class="p-1.5">
-        <p>
-          {{ weatherCurrent.wind.speed }} м/с
-        </p>
+        <div class="p-1.5 text-sm">
+          <p>
+            {{ weatherCurrent.wind.speed }} м/с
+          </p>
 
-        <p>
-          до {{ weatherCurrent.wind.gust }} м/с
-        </p>
+          <p>
+            до {{ weatherCurrent.wind.gust }} м/с
+          </p>
+        </div>
       </div>
     </div>
   </UCard>
@@ -133,12 +137,11 @@ const arrowContainerStyles = computed(() => {
 .header {
   display: flex;
   justify-content: space-between;
-}
+  flex-direction: column;
 
-.weather {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
+  @screen md {
+    flex-direction: row;
+  }
 }
 
 .icon {
@@ -146,13 +149,11 @@ const arrowContainerStyles = computed(() => {
   height: 50px;
 }
 
-.image {
-  filter: brightness(50%);
-}
-
 .wind {
-  display: inline-flex;
+  display: flex;
   flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .arrowContainer {
@@ -161,25 +162,5 @@ const arrowContainerStyles = computed(() => {
   justify-content: center;
   width: 50px;
   height: 50px;
-}
-
-.upArrow {
-  display: inline-block;
-  margin: 10px;
-  width: 10px;
-  height: 10px;
-  border-top: 3px solid #F10C0C;
-  border-left: 3px solid #F10C0C;
-  transform-origin: center;
-  transform: rotate(45deg);
-
-  &::after {
-    content: "";
-    display: block;
-    width: 3px;
-    height: 20px;
-    background-color: #F10C0C;
-    transform: rotate(-45deg) translate(6px, 0px);
-  }
 }
 </style>

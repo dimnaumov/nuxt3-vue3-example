@@ -106,7 +106,7 @@ export type WeatherTabItem = {
   label: string;
 }
 
-export type WeatherForecastContents = {
+export interface WeatherForecastContents {
   cod: number;
   message: number;
   cnt: number;
@@ -115,7 +115,7 @@ export type WeatherForecastContents = {
 }
 
 export type WeatherItemForecast = {
-  dt: number;
+  dt: number |string;
   main: WeatherMain;
   weather: WeatherItem[];
   clouds: WeatherClouds;
@@ -127,6 +127,10 @@ export type WeatherItemForecast = {
   };
   dt_txt: string;
 }
+
+export interface WeatherForecastContentsGroupByDate extends WeatherForecastContents {
+  listByDate: Record<string, WeatherItemForecast[]>;
+};
 
 export type WeatherCity = {
   id: number;

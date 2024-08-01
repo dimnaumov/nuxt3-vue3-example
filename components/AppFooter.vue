@@ -1,3 +1,10 @@
 <template>
-  <footer>Footer</footer>
+  <footer class="py-4">
+    <NuxtLink
+      to="/"
+      class="font-mono font-bold text-2xl"
+    >
+      dnaumov.site
+    </NuxtLink>
+  </footer>
 </template>

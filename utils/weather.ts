@@ -1,4 +1,4 @@
-import type { WeatherCurrentContents, WeatherForecastContents } from "~/components/Weather/types";
+import type { WeatherCurrentContents, WeatherForecastContents, WeatherForecastContentsGroupByDate, WeatherItemForecast } from "~/components/Weather/types";
 import { fromUnixTime, format } from "date-fns";
 
 export function getQueryString(parameters: object) {
@@ -63,5 +63,74 @@ export function formattedWeatherCurrent(data: string | undefined): WeatherCurren
     console.error("Invalid JSON string:", error);
 
     return null;
-  }   
+  }
 }
+
+export function formattedWeatherForecast (data: string | undefined): WeatherForecastContents | null {
+  if (!data) {
+    return null;
+  }
+  
+  try {
+    const dataJson: WeatherForecastContents = JSON.parse(data);
+    
+    return {
+      ...dataJson,
+      list: dataJson.list.map((item: WeatherItemForecast) => {
+        return {
+          ...item,
+          dt: format(fromUnixTime(item.dt as number), 'yyyy-MM-dd HH:mm'),
+          wind: {
+            ...item.wind,
+            speed: Math.round(item.wind.speed),
+            gust: Math.round(item.wind.gust),
+          },
+        }
+      }),
+    };
+  } catch (error) {
+    console.error("Invalid JSON string:", error);
+
+    return null;
+  }
+}
+
+export function formattedWeatherForecastGroupByDate (data: string | undefined): WeatherForecastContentsGroupByDate | null {
+  if (!data) {
+    return null;
+  }
+  
+  try {
+    const dataJson: WeatherForecastContents = JSON.parse(data);
+    
+    return {
+      ...dataJson,
+      listByDate: dataJson.list.reduce((result: Record<string, WeatherItemForecast[]>, item: WeatherItemForecast) => {
+          const formattedDate = format(fromUnixTime(item.dt as number), 'dd.MM.yyyy');
+
+          const formattedItem = {
+            ...item,
+            dt: format(fromUnixTime(item.dt as number), 'HH:mm'),
+            wind: {
+              ...item.wind,
+              speed: Math.round(item.wind.speed),
+              gust: Math.round(item.wind.gust),
+            },
+          };
+
+          if (!result[formattedDate]) {
+            result[formattedDate] = [formattedItem];
+          } else {
+            result[formattedDate].push(formattedItem);
+          }
+
+          return result;
+        }, {}),
+    };
+  } catch (error) {
+    console.error("Invalid JSON string:", error);
+
+    return null;
+  }
+}
+
