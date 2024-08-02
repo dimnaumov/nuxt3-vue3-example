@@ -35,8 +35,6 @@ export function formattedWeatherCurrent(data: string | undefined): WeatherCurren
   try {
     const dataJson: WeatherCurrentContents = JSON.parse(data);
 
-    // console.warn("format(fromUnixTime(dataJson.dt), 'YYYY-MM-DD hh:mm')", format(fromUnixTime(dataJson.dt as number), 'yyyy-MM-DD hh:mm'));
-
     return {
       ...dataJson,
       main: {

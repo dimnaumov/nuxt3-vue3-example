@@ -1,32 +1,8 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
-import { PROXY_URL, WEATHER_CURRENT_REQUEST_OPTIONS, WEATHER_SERVICE_BASE_URL } from '~/constants/weather';
-import type { ProxyResponse, WeatherCurrentContents } from '../Weather/types';
+import type { WeatherCurrentContents } from '../Weather/types';
 
-const queryString = computed(() =>
-  getQueryString({
-    ...WEATHER_CURRENT_REQUEST_OPTIONS.parameters,
-  }),
-);
-
-const url = computed(() => `${WEATHER_SERVICE_BASE_URL}${WEATHER_CURRENT_REQUEST_OPTIONS.url}?${queryString.value}`);
-
-const { data, refresh, status } = await useAsyncData<ProxyResponse>(
-  'weatherCurrent',
-  () => $fetch(
-    PROXY_URL,
-    {
-      method: 'GET',
-      params: {
-        url: url.value,
-      },
-    },
-  ),
-);
-
-// const { data, refresh, status } = await useFetch<ProxyResponse>(PROXY_URL, {
-//   query: { url }
-// });
+const { data, refresh, status, error } = await useFetchWeatherCurrent();
 
 const weatherCurrent: ComputedRef<WeatherCurrentContents | null> = computed(() => {
   return formattedWeatherCurrent(data.value?.contents);
@@ -54,7 +30,7 @@ const arrowContainerStyles = computed(() => {
   </UCard>
 
   <UCard v-else-if="status === 'error'">
-    ERROR
+    {{ error }}
   </UCard>
 
   <UCard v-else-if="weatherCurrent">

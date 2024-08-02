@@ -88,11 +88,11 @@ export interface WeatherCurrentContents {
 export type WeatherForecastRequestOptions = WeatherRequestOptions<WeatherParametersForecast>;
 
 export type ProxyResponseStatus = {
-  "url": string;
-  "content_type": string;
-  "http_code": number;
-  "response_time": number;
-  "content_length": number;
+  url: string;
+  content_type: string;
+  http_code: number;
+  response_time: number;
+  content_length: number;
 }
 
 export type ProxyResponse = {
