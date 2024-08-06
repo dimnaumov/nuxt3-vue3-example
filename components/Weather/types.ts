@@ -21,7 +21,7 @@ export type WeatherItem = {
   icon: string;
 }
 
-export type WeatherMain = {
+export interface WeatherMain {
   temp: number;
   feels_like: number;
   temp_min: number;
@@ -31,6 +31,10 @@ export type WeatherMain = {
   sea_level: number;
   grnd_level: number;
   temp_kf?: number;
+}
+
+export interface FormattedWeatherMain extends Omit<WeatherMain, 'grnd_level'> {
+  grnd_level: string;
 }
 
 export type WeatherWind = {

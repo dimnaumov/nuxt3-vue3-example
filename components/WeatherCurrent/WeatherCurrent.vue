@@ -50,6 +50,15 @@ const weatherCurrent: ComputedRef<WeatherCurrentContents | null> = computed(() =
         </p>
       </div>
 
+      <WeatherDayLight
+        :sunrise="weatherCurrent.sys.sunrise as string"
+        :sunset="weatherCurrent.sys.sunset as string"
+      />
+
+      <WeatherPressure :grnd_level="weatherCurrent.main.grnd_level" />
+
+      <WeatherHumidity :humidity="weatherCurrent.main.humidity" />
+
       <WeatherDescription :weather="weatherCurrent.weather" />
 
       <WeatherWind :wind="weatherCurrent.wind" />
