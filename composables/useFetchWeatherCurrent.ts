@@ -1,4 +1,4 @@
-import type { ProxyResponse } from "~/components/Weather/types";
+import type { ProxyResponse, WeatherCoord } from "~/components/Weather/types";
 import {
   PROXY_URL,
   WEATHER_CURRENT_REQUEST_OPTIONS,
@@ -6,9 +6,12 @@ import {
 } from "~/constants/weather";
 
 export async function useFetchWeatherCurrent() {
+  const coords: Ref<WeatherCoord> = useState('coords');
+
   const queryString = computed(() =>
     getQueryString({
       ...WEATHER_CURRENT_REQUEST_OPTIONS.parameters,
+      ...coords.value,
     }),
   );  
 

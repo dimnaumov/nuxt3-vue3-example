@@ -3,6 +3,8 @@ import type { Props } from './types';
 
 const { wind } = defineProps<Props>();
 
+const isGust = computed(() => wind.gust && wind.speed !== wind.gust)
+
 const arrowContainerStyles = computed(() => {
   return {
     transform: `rotate(${wind.deg + 180}deg)`,
@@ -20,12 +22,12 @@ const arrowContainerStyles = computed(() => {
       <span class="text-3xl text-slate-500">&#8593;</span>
     </div>
   
-    <div class="p-1.5 text-sm">
+    <div class="flex flex-col justify-center p-1.5 text-sm">
       <p>
         {{ wind.speed }} м/с
       </p>
   
-      <p>
+      <p v-if="isGust">
         до {{ wind.gust }} м/с
       </p>
     </div>

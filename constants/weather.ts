@@ -1,15 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {
   WeatherCurrentRequestOptions,
   WeatherForecastRequestOptions,
 } from "~/components/Weather/types";
 
-const coordUstUren = {
-  lat: 54.374003,
-  lon: 47.072538,
-};
-
-const coordUlyanovsk = {
+export const coordUlyanovsk = {
   lat: 54.3142,
   lon: 48.4031,
 };
