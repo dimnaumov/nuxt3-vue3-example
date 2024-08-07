@@ -1,12 +1,7 @@
-<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
 import {
-  PROXY_URL,
   WEATHER_FORECAST_PERIOD_COUNT_IN_DAY,
-  WEATHER_FORECAST_REQUEST_OPTIONS,
-  WEATHER_SERVICE_BASE_URL,
 } from '~/constants/weather';
-import type { ProxyResponse, WeatherForecastContents } from '../Weather/types';
 
 const forecactPeriods = [
   {
@@ -33,54 +28,17 @@ const forecactPeriods = [
 
 const forecastPeriodSelected = ref(forecactPeriods[0].value);
 
-const queryString = computed(() => {
-  return getQueryString({
-    ...WEATHER_FORECAST_REQUEST_OPTIONS.parameters,
-    ...{
-      cnt: forecastPeriodSelected.value,
-    },
-  });
+const requestParameters = computed(() => {
+  return {
+    cnt: forecastPeriodSelected.value,
+  };
 });
 
-const url = computed(() => `${WEATHER_SERVICE_BASE_URL}${WEATHER_FORECAST_REQUEST_OPTIONS.url}?${queryString.value}`);
-
-// const { data, status, refresh } = await useAsyncData<ProxyResponse>(
-//   'weatherForecast',
-//   () => $fetch(
-//     PROXY_URL,
-//     {
-//       method: 'GET',
-//       params: {
-//         url: url.value,
-//       }
-//     }
-//   )
-// );
-
-const { data, status, refresh } = await useFetch<ProxyResponse>(PROXY_URL, {
-  query: { url },
-
-  watch: [ url ],
-});
-
-const weatherForecast: ComputedRef<WeatherForecastContents | null> = computed(() => {
-  return formattedWeatherForecast(data.value?.contents);
-});
+const { data, status, refresh, error } = await useFetchWeatherForecast(requestParameters);
 
 const weatherForecastGroupByDate = computed(() => {
   return formattedWeatherForecastGroupByDate(data.value?.contents);
 });
-
-function getArrowContainerStyle(deg: number) {
-  if(!deg) {
-    return null;
-  }
-
-  return {
-    transform: `rotate(${deg + 180}deg)`,
-    transformOrigin: 'center center',
-  };
-}
 </script>
 
 <template>
@@ -92,6 +50,10 @@ function getArrowContainerStyle(deg: number) {
     v-if="status === 'pending'"
   >
     <Loading />
+  </UCard>
+
+  <UCard v-else-if="status === 'error'">
+    {{ error }}
   </UCard>
 
   <UCard v-else-if="weatherForecastGroupByDate">
@@ -146,50 +108,9 @@ function getArrowContainerStyle(deg: number) {
               {{ Math.round(itemForecast.main.temp) }}°C
             </p>
       
-            <div
-              class="flex items-center border border-slate-300 rounded border self-start mb-1"
-            >
-              <template
-                v-for="item in itemForecast.weather"
-                :key="item.id"
-              >
-                <div
-                  :class="$style.icon"
-                  class="w-12 h-12"
-                >
-                  <img
-                    class="brightness-75"
-                    :src="`https://openweathermap.org/img/wn/${item.icon}@2x.png`"
-                    :alt="item.description"
-                  >
-                </div>
-  
-                <p class="p-1.5 text-sm">
-                  {{ item.description }}
-                </p>
-              </template>
-            </div>
-  
-            <div
-              class="flex border-slate-300 rounded border self-start"
-            >
-              <div
-                class="flex items-center justify-center w-12 h-12"
-                :style="getArrowContainerStyle(itemForecast.wind.deg)"
-              >
-                <span class="text-3xl text-slate-500">&#8593;</span>
-              </div>
-  
-              <div class="p-1.5 text-sm">
-                <p>
-                  {{ itemForecast.wind.speed }} м/с
-                </p>
-  
-                <p>
-                  до {{ itemForecast.wind.gust }} м/с
-                </p>
-              </div>
-            </div>
+            <WeatherDescription :weather="itemForecast.weather" />
+
+            <WeatherWind :wind="itemForecast.wind" />
           </div>
         </div>
       </div>
