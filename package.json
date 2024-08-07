@@ -10,7 +10,11 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "start": "nuxt start"
+    "start": "nuxt start",
+    "postbuild": "mkdir -p .output/server/node_modules/geoip-lite/data && cp -R node_modules/geoip-lite/data/. .output/server/node_modules/geoip-lite/data/"
+  },
+  "_commnets": {
+    "postbuild": "это команда для linux (в windows не будет работать). как вариант можно использовать shx"
   },
   "dependencies": {
     "@nuxt/ui": "2.17.0",
