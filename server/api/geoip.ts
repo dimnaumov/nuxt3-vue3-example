@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
   const geo = geoip.lookup(ip);
 
-  if (geo) {    
+  if (geo) {
     const [ lat, lon ] = geo.ll;
 
     return {

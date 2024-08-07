@@ -4,6 +4,8 @@
   await callOnce(async () => {
     const response = await $fetch('/api/geoip');
 
+    console.warn('response', response);
+
     if (response) {
       coords.value = response;
     }
