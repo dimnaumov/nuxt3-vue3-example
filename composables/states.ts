@@ -1,4 +1,4 @@
 import type { WeatherCoord } from "~/components/Weather/types";
-import { coordUlyanovsk } from "~/constants/weather";
+import { coordDefault } from "~/constants/weather";
 
-export const useCoords = () => useState<WeatherCoord>('coords', () => coordUlyanovsk);
+export const useCoords = () => useState<WeatherCoord>('coords', () => coordDefault);

@@ -1,9 +1,11 @@
-import { defineEventHandler } from 'h3';
+export default defineEventHandler(async (event) => {
+  const xForwardedFor = event.node.req.headers['x-forwarded-for'] as string;
+  const ip = xForwardedFor ? xForwardedFor.split(',')[0].trim() : event.node.req.socket.remoteAddress;
 
-export default defineEventHandler((event) => {
-  const ip = event.node.req.headers['x-forwarded-for'] || event.node.req.socket.remoteAddress;
-
-  console.warn('ip middleware', ip);
-
-  event.context.clientIp = ip;
-});
+  // здесь можно проверять тип контента, чтобы убедиться,
+  // что middleware обрабатывает только HTML-страницы
+  if (ip) {
+    event.context.clientIp = ip;
+    // event.context.clientIp = "207.97.227.239";
+  }
+})

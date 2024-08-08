@@ -1,12 +1,10 @@
 import geoip from 'geoip-lite';
+import { coordDefault } from '~/constants/weather';
 
 export default defineEventHandler(async (event) => {
-  // const ip = getRequestHeader(event, 'x-forwarded-for') || event.node.req.socket.remoteAddress || '';
-  // const ipStatic = "207.97.227.239";
+  const { clientIp } = event.context;
 
-  const ip = event.context.clientIp;
-
-  const geo = geoip.lookup(ip);
+  const geo = geoip.lookup(clientIp || '');
 
   if (geo) {
     const [ lat, lon ] = geo.ll;
@@ -17,5 +15,7 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  return null;
+  return {
+    ...coordDefault,
+  };
 });

@@ -2,12 +2,10 @@
   const coords = useState('coords');
 
   await callOnce(async () => {
-    const response = await $fetch('/api/geoip');
+    const { data } = await useFetch('/api/geoip');
 
-    console.warn('response', response);
-
-    if (response) {
-      coords.value = response;
+    if (data.value) {
+      coords.value = data.value;
     }
   });
 </script>
