@@ -1,5 +1,21 @@
-import type { WeatherCurrentContents, WeatherForecastContents, WeatherForecastContentsGroupByDate, WeatherItemForecast } from "~/components/Weather/types";
-import { fromUnixTime, format } from "date-fns";
+import type {
+  WeatherCurrentContents,
+  WeatherForecastContents,
+  WeatherForecastContentsGroupByDate,
+  WeatherItemForecast,
+} from "~/components/Weather/types";
+import moment from "moment";
+
+function getDateByTimeStampAndOffset(
+  timestamp: number,
+  offsetSeconds: number,
+  template: string = 'DD.MM.YYYY H:mm',
+) {
+  return  moment
+    .unix(timestamp + offsetSeconds)
+    .utc()
+    .format(template);
+}
 
 export function getQueryString(parameters: object) {
   return Object.entries(parameters)
@@ -9,22 +25,6 @@ export function getQueryString(parameters: object) {
     return acc;
   }, [])
   .join('&');
-}
-
-export function formattedWeather(data: string | undefined): WeatherCurrentContents | WeatherForecastContents | null {  
-  if (!data) {
-    return null;
-  }
-
-  try {
-    const dataJson = JSON.parse(data);
-
-    return dataJson;
-  } catch (error) {
-    console.error("Invalid JSON string:", error);
-
-    return null;
-  }   
 }
 
 export function formattedWeatherCurrent(data: string | undefined): WeatherCurrentContents | null {  
@@ -45,11 +45,11 @@ export function formattedWeatherCurrent(data: string | undefined): WeatherCurren
         sea_level: Math.round(dataJson.main.sea_level * 0.75006),
         grnd_level: Math.round(dataJson.main.grnd_level * 0.75006),
       },
-      dt: format(fromUnixTime(dataJson.dt as number), 'dd.MM.yyyy HH:mm'),
+      dt: getDateByTimeStampAndOffset(dataJson.dt as number, dataJson.timezone),
       sys: {
         ...dataJson.sys,
-        sunrise: format(fromUnixTime(dataJson.sys.sunrise as number), 'HH:mm'),
-        sunset: format(fromUnixTime(dataJson.sys.sunset as number), 'HH:mm'),
+        sunrise: getDateByTimeStampAndOffset(dataJson.sys.sunrise as number, dataJson.timezone, 'HH:mm'),
+        sunset: getDateByTimeStampAndOffset(dataJson.sys.sunset as number, dataJson.timezone, 'HH:mm'),
       },
       wind: {
         ...dataJson.wind,
@@ -77,7 +77,7 @@ export function formattedWeatherForecast (data: string | undefined): WeatherFore
       list: dataJson.list.map((item: WeatherItemForecast) => {
         return {
           ...item,
-          dt: format(fromUnixTime(item.dt as number), 'yyyy-MM-dd HH:mm'),
+          dt: getDateByTimeStampAndOffset(item.dt as number, dataJson.city.timezone),
           wind: {
             ...item.wind,
             speed: Math.round(item.wind.speed),
@@ -104,11 +104,11 @@ export function formattedWeatherForecastGroupByDate (data: string | undefined): 
     return {
       ...dataJson,
       listByDate: dataJson.list.reduce((result: Record<string, WeatherItemForecast[]>, item: WeatherItemForecast) => {
-          const formattedDate = format(fromUnixTime(item.dt as number), 'dd.MM.yyyy');
+          const formattedDate = getDateByTimeStampAndOffset(item.dt as number, dataJson.city.timezone, 'DD.MM.YYYY');
 
           const formattedItem = {
             ...item,
-            dt: format(fromUnixTime(item.dt as number), 'HH:mm'),
+            dt: getDateByTimeStampAndOffset(item.dt as number, dataJson.city.timezone, 'HH:mm'),
             wind: {
               ...item.wind,
               speed: Math.round(item.wind.speed),
