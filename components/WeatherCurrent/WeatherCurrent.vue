@@ -2,11 +2,25 @@
 <script setup lang="ts">
 import type { WeatherCurrentContents } from '../Weather/types';
 
-const { data, refresh, status, error } = await useFetchWeatherCurrent();
+const {
+  data,
+  refresh,
+  status,
+  error,
+} = await useFetchWeatherCurrent();
+
+const isPending = computed(() => status.value === 'pending');
+const isError = computed(() => status.value === 'error');
 
 const weatherCurrent: ComputedRef<WeatherCurrentContents | null> = computed(() => {
   return formattedWeatherCurrent(data.value?.contents);
 });
+
+function update() {
+  if(!isPending.value) {
+    refresh();
+  }
+}
 </script>
 
 <template>
@@ -14,32 +28,40 @@ const weatherCurrent: ComputedRef<WeatherCurrentContents | null> = computed(() =
     {{ weatherCurrent }}
   </pre> -->
 
-  <UCard v-if="status === 'pending'">
-    <Loading />
-  </UCard>
-
-  <UCard v-else-if="status === 'error'">
-    {{ error }}
-  </UCard>
-
-  <UCard v-else-if="weatherCurrent">
+  <UCard>
     <template #header>
       <div :class="$style.header">
-        <p class="text-2xl flex justify-center items-center">
-          Погода: {{ weatherCurrent.name }}
+        <p
+          :class="$style.title"
+          class="text-2xl"
+        >
+          Погода: {{ weatherCurrent?.name }}
         </p>
 
         <UButton
           size="xl"
           variant="outline"
-          @click="refresh()"
+          @click="update"
         >
           Обновить
         </UButton>
       </div>
     </template>
 
-    <div class="flex flex-col">
+    <Loading v-if="isPending" />
+
+    <UAlert
+      v-else-if="isError"
+      color="red"
+      variant="subtle"
+      title="Не удалось получить данные!"
+      :description="error?.message"
+    />
+
+    <div
+      v-else-if="weatherCurrent"
+      class="flex flex-col"
+    >
       <div class="currentWeather">
         <p>
           {{ weatherCurrent.dt }}
@@ -55,25 +77,33 @@ const weatherCurrent: ComputedRef<WeatherCurrentContents | null> = computed(() =
         :sunset="weatherCurrent.sys.sunset as string"
       />
 
-      <WeatherPressure :grnd_level="weatherCurrent.main.grnd_level" />
-
-      <WeatherHumidity :humidity="weatherCurrent.main.humidity" />
-
       <WeatherDescription :weather="weatherCurrent.weather" />
 
       <WeatherWind :wind="weatherCurrent.wind" />
+
+      <WeatherPressure :grnd_level="weatherCurrent.main.grnd_level" />
+
+      <WeatherHumidity :humidity="weatherCurrent.main.humidity" />
     </div>
   </UCard>
 </template>
 
 <style lang="scss" module>
 .header {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
+  @screen md {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.title {
+  margin-bottom: 8px;
 
   @screen md {
-    flex-direction: row;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
   }
 }
 </style>
