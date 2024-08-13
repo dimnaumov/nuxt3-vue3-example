@@ -36,9 +36,18 @@ const requestParameters = computed(() => {
 
 const { data, status, refresh, error } = await useFetchWeatherForecast(requestParameters);
 
+const isPending = computed(() => status.value === 'pending');
+const isError = computed(() => status.value === 'error');
+
 const weatherForecastGroupByDate = computed(() => {
   return formattedWeatherForecastGroupByDate(data.value?.contents);
 });
+
+function update() {
+  if (!isPending.value) {
+    refresh();
+  }
+}
 </script>
 
 <template>
@@ -46,25 +55,19 @@ const weatherForecastGroupByDate = computed(() => {
     {{ weatherForecastGroupByDate }}
   </pre> -->
 
-  <UCard
-    v-if="status === 'pending'"
-  >
-    <Loading />
-  </UCard>
-
-  <UCard v-else-if="status === 'error'">
-    {{ error }}
-  </UCard>
-
-  <UCard v-else-if="weatherForecastGroupByDate">
+  <UCard>
     <template #header>
       <div :class="$style.header">
-        <p class="text-2xl flex items-center">
-          Погода: {{ weatherForecastGroupByDate.city.name }}
+        <p
+          :class="$style.title"
+          class="text-2xl"
+        >
+          Погода: {{ weatherForecastGroupByDate?.city.name }}
         </p>
   
         <USelect
           v-model="forecastPeriodSelected"
+          :class="$style.selectPeriod"
           :options="forecactPeriods"
           option-attribute="name"
           size="xl"
@@ -73,14 +76,24 @@ const weatherForecastGroupByDate = computed(() => {
         <UButton
           size="xl"
           variant="outline"
-          @click="refresh()"
+          @click="update"
         >
           Обновить
         </UButton>
       </div>
     </template>
 
-    <div>
+    <Loading v-if="isPending" />
+
+    <UAlert
+      v-else-if="isError"
+      color="red"
+      variant="subtle"
+      title="Не удалось получить данные!"
+      :description="error?.message"
+    />
+
+    <div v-else-if="weatherForecastGroupByDate">
       <div
         v-for="(itemForecastList, date) in weatherForecastGroupByDate.listByDate"
         :key="date"
@@ -107,10 +120,14 @@ const weatherForecastGroupByDate = computed(() => {
             <p class="text-5xl font-medium">
               {{ Math.round(itemForecast.main.temp) }}°C
             </p>
-      
+
             <WeatherDescription :weather="itemForecast.weather" />
 
             <WeatherWind :wind="itemForecast.wind" />
+
+            <WeatherPressure :grnd_level="itemForecast.main.grnd_level" />
+
+            <WeatherHumidity :humidity="itemForecast.main.humidity" />
           </div>
         </div>
       </div>
@@ -121,11 +138,22 @@ const weatherForecastGroupByDate = computed(() => {
 <style lang="scss" module>
 .header {
   display: flex;
-  justify-content: space-between;
   flex-direction: column;
+  align-items: flex-start;
 
   @screen md {
+    justify-content: space-between;
     flex-direction: row;
+  }
+}
+
+.title {
+  margin-bottom: 8px;
+
+  @screen md {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
   }
 }
 
@@ -136,6 +164,14 @@ const weatherForecastGroupByDate = computed(() => {
 
   @screen md {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.selectPeriod {
+  margin-bottom: 8px;
+
+  @screen md {
+    margin-bottom: 0;
   }
 }
 </style>

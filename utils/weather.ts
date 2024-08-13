@@ -109,6 +109,12 @@ export function formattedWeatherForecastGroupByDate (data: string | undefined): 
           const formattedItem = {
             ...item,
             dt: getDateByTimeStampAndOffset(item.dt as number, dataJson.city.timezone, 'HH:mm'),
+            main: {
+              ...item.main,
+              pressure: Math.round(item.main.sea_level * 0.75006),
+              sea_level: Math.round(item.main.sea_level * 0.75006),
+              grnd_level: Math.round(item.main.grnd_level * 0.75006),      
+            },
             wind: {
               ...item.wind,
               speed: Math.round(item.wind.speed),
