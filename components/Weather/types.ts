@@ -56,7 +56,6 @@ export type WeatherSys = {
 export interface WeatherParameters {
   lat: number;
   lon: number;
-  appid: string;
   mode: WeatherMode;
   units: WeatherUnits;
   lang: WeaterLangCode;
@@ -67,7 +66,7 @@ export interface WeatherParametersForecast extends WeatherParameters {
 }
 
 export interface WeatherRequestOptions<T> {
-  url: string;
+  path: string;
   parameters: T;
 }
 
@@ -100,7 +99,7 @@ export type ProxyResponseStatus = {
 }
 
 export type ProxyResponse = {
-  contents: string;
+  contents: WeatherForecastContents | WeatherCurrentContents;
   status: ProxyResponseStatus;
 }
 
