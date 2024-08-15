@@ -13,10 +13,9 @@ export const PROXY_URL = 'http://api.allorigins.win/get';
 export const WEATHER_SERVICE_BASE_URL = 'http://api.openweathermap.org/data/2.5/';
 
 export const WEATHER_CURRENT_REQUEST_OPTIONS: WeatherCurrentRequestOptions = {
-  url: 'weather',
+  path: 'weather',
   parameters: {
     ...coordDefault,
-    appid: 'ee5183b68e470bb98bf6b56d8bf74384',
     mode: 'json',
     units: 'metric',
     lang: 'ru',
@@ -24,14 +23,13 @@ export const WEATHER_CURRENT_REQUEST_OPTIONS: WeatherCurrentRequestOptions = {
 };
 
 export const WEATHER_FORECAST_REQUEST_OPTIONS: WeatherForecastRequestOptions = {
-  url: 'forecast',
+  path: 'forecast',
   parameters: {
     ...coordDefault,
-    appid: 'ee5183b68e470bb98bf6b56d8bf74384',
     mode: 'json',
     units: 'metric',
     lang: 'ru',
-    cnt: 15,
+    cnt: 8,
   },
 }
 

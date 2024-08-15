@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import {
   WEATHER_FORECAST_PERIOD_COUNT_IN_DAY,
+  WEATHER_FORECAST_REQUEST_OPTIONS,
 } from '~/constants/weather';
+import type { WeatherForecastContents } from '../Weather/types';
+
+const { path, parameters } = WEATHER_FORECAST_REQUEST_OPTIONS;
 
 const forecactPeriods = [
   {
@@ -28,19 +32,18 @@ const forecactPeriods = [
 
 const forecastPeriodSelected = ref(forecactPeriods[0].value);
 
-const requestParameters = computed(() => {
-  return {
-    cnt: forecastPeriodSelected.value,
-  };
-});
+const requestParameters = computed(() => ({
+  ...parameters,
+  cnt: forecastPeriodSelected.value,
+}));
 
-const { data, status, refresh, error } = await useFetchWeatherForecast(requestParameters);
+const { data, status, refresh, error } = await useFetchWeather(path, requestParameters);
 
 const isPending = computed(() => status.value === 'pending');
 const isError = computed(() => status.value === 'error');
 
 const weatherForecastGroupByDate = computed(() => {
-  return formattedWeatherForecastGroupByDate(data.value?.contents);
+  return formattedWeatherForecastGroupByDate(data.value?.contents as WeatherForecastContents);
 });
 
 function update() {

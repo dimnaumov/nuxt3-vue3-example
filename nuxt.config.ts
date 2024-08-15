@@ -5,10 +5,18 @@ export default defineNuxtConfig({
   // devtools: {
   //   enabled: process.env.NODE_ENV !== 'production',
   // },
+  // devtools: { enabled: true },
+
+  runtimeConfig: {
+    public: {
+      BASE_URL: process.env.BASE_URL,
+    },
+    private: {
+      WEATHER_API_KEY: process.env.WEATHER_API_KEY,
+    },
+  },
 
   compatibilityDate: '2024-04-03',
-
-  // devtools: { enabled: true },
 
   css: [
     '~/assets/scss/_global.scss',

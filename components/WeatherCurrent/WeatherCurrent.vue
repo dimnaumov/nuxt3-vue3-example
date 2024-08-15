@@ -1,19 +1,25 @@
-<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
+import { WEATHER_CURRENT_REQUEST_OPTIONS } from '~/constants/weather';
 import type { WeatherCurrentContents } from '../Weather/types';
+
+const { path, parameters } = WEATHER_CURRENT_REQUEST_OPTIONS;
+
+const requestParameters = computed(() => ({
+  ...parameters,
+}));
 
 const {
   data,
   refresh,
   status,
   error,
-} = await useFetchWeatherCurrent();
+} = await useFetchWeather(path, requestParameters);
 
 const isPending = computed(() => status.value === 'pending');
 const isError = computed(() => status.value === 'error');
 
 const weatherCurrent: ComputedRef<WeatherCurrentContents | null> = computed(() => {
-  return formattedWeatherCurrent(data.value?.contents);
+  return formattedWeatherCurrent(data.value?.contents as WeatherCurrentContents);
 });
 
 function update() {
