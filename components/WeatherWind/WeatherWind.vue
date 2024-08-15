@@ -19,7 +19,7 @@ const arrowContainerStyles = computed(() => {
       :style="arrowContainerStyles"
       class="flex w-12 h-12 items-center justify-center"
     >
-      <span class="text-3xl text-slate-500">&#8593;</span>
+      <span class="text-3xl text-black">&#8593;</span>
     </div>
   
     <div class="flex flex-col justify-center p-1.5 text-sm">

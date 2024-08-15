@@ -19,8 +19,18 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
 
   css: [
-    '~/assets/scss/_global.scss',
+    '~/assets/scss/global.scss',
   ],
+
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "~/assets/scss/index.scss" as *;',
+        },
+      },
+    },
+  },
 
   modules: ["@nuxt/eslint", "@nuxt/ui"],
 
