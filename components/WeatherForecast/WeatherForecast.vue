@@ -60,20 +60,17 @@ function update() {
 
   <UCard>
     <template #header>
-      <div :class="$style.header">
-        <p
-          :class="$style.title"
-          class="text-2xl"
-        >
+      <div class="flex flex-col items-start md:justify-between md:flex-row">
+        <p class="text-2xl mb-2 md:flex md:items-center md:mb-0">
           Погода: {{ weatherForecastGroupByDate?.city.name }}
         </p>
   
         <USelect
           v-model="forecastPeriodSelected"
-          :class="$style.selectPeriod"
           :options="forecactPeriods"
           option-attribute="name"
           size="xl"
+          class="mb-2 md:mb-0"
         />
 
         <UButton
@@ -105,10 +102,7 @@ function update() {
           <span class="text-2xl">{{ date }}</span>
         </UDivider>
 
-        <div
-          :class="$style.forecast"
-          class="mb-4"
-        >
+        <div class="mb-4 grid grid-cols-1 gap-2 md:grid-cols-4">
           <div
             v-for="itemForecast in itemForecastList"
             :key="itemForecast.dt"
@@ -137,44 +131,3 @@ function update() {
     </div>
   </UCard>
 </template>
-
-<style lang="scss" module>
-.header {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  @screen md {
-    justify-content: space-between;
-    flex-direction: row;
-  }
-}
-
-.title {
-  margin-bottom: 8px;
-
-  @screen md {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0;
-  }
-}
-
-.forecast {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 0.5rem;
-
-  @screen md {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.selectPeriod {
-  margin-bottom: 8px;
-
-  @screen md {
-    margin-bottom: 0;
-  }
-}
-</style>

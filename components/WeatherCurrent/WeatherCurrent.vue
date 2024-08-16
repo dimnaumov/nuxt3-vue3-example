@@ -36,11 +36,8 @@ function update() {
 
   <UCard>
     <template #header>
-      <div :class="$style.header">
-        <p
-          :class="$style.title"
-          class="text-2xl"
-        >
+      <div class="md:flex md:flex-row md:justify-between">
+        <p class="text-2xl mb-2 md:mb-0 md:flex md:items-center">
           Погода: {{ weatherCurrent?.name }}
         </p>
 
@@ -93,23 +90,3 @@ function update() {
     </div>
   </UCard>
 </template>
-
-<style lang="scss" module>
-.header {
-  @screen md {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-}
-
-.title {
-  margin-bottom: 8px;
-
-  @screen md {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0;
-  }
-}
-</style>
