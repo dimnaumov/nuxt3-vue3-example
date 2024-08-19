@@ -1,12 +1,15 @@
 <template>
-  <footer class="flex justify-between py-4">
-    <NuxtLink
-      to="/"
-      class="font-mono font-bold text-2xl"
-    >
-      dnaumov.site
-    </NuxtLink>
-
-    <AppContacts />
+  <footer :class="$style.footer">
+    <UContainer class="flex justify-between py-4">
+      <AppLogo />
+  
+      <AppContacts />
+    </UContainer>
   </footer>
 </template>
+
+<style lang="scss" module>
+.footer {
+  border-top-width: 1px;
+}
+</style>
