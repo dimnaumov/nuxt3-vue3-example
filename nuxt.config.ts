@@ -22,6 +22,16 @@ export default defineNuxtConfig({
     '~/assets/scss/global.scss',
   ],
 
+  app: {
+    head: {
+      titleTemplate: '%s - Наумов Дмитрий, Nuxt3/Vue3',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'minimum-scale=1.0, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' },
+      ],
+    },
+  },
+
   vite: {
     css: {
       preprocessorOptions: {

@@ -1,13 +1,18 @@
 <template>
-  <header class="flex justify-between py-4">
-    <NuxtLink
-      to="/"
-      class="font-mono font-bold text-2xl"
-    >
-      dnaumov.site
-    </NuxtLink>
+  <header
+    :class="$style.header"
+    class="border-slate-200 shadow-md bg-white"
+  >
+    <UContainer class="flex justify-between py-4">
+      <AppLogo />
 
-    <AppContacts />
+      <AppContacts />
+    </UContainer>
   </header>
 </template>
 
+<style lang="scss" module>
+.header {
+  border-bottom-width: 1px;
+}
+</style>

@@ -15,13 +15,25 @@ const items: WeatherTabItem[] = [
 ];
 
 const defaultIndex = ref(0);
+
+const uiTabs = {
+  list: {
+    height: 'h-16',
+    tab: {
+      height: 'h-14',
+      size: 'text-lg',
+      font: 'font-bold',
+    },
+  },
+};
 </script>
 
 <template>
   <UTabs
     :items="items"
-    class="w-full"
     :default-index="defaultIndex"
+    :ui="uiTabs"
+    class="w-full"
   >
     <template #current>
       <WeatherCurrent />
