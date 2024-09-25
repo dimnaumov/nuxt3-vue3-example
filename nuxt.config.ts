@@ -40,6 +40,19 @@ export default defineNuxtConfig({
         },
       },
     },
+
+    server: {
+      hmr: {
+        protocol: 'ws',
+        host: 'localhost',
+        port: 24678,
+      },
+
+      watch: {
+          usePolling: true,
+          interval: 1000,
+      },
+    }
   },
 
   modules: ["@nuxt/eslint", "@nuxt/ui"],

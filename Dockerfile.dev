@@ -1,0 +1,23 @@
+# syntax = docker/dockerfile:1
+
+ARG NODE_VERSION=20.15.0
+
+FROM node:${NODE_VERSION}-slim as base
+
+ENV NODE_ENV=development
+
+WORKDIR /front
+
+# Build
+FROM base as build
+
+COPY package*.json /front
+
+RUN npm install
+
+# Run
+FROM base
+
+COPY --from=build /front/node_modules /front/node_modules
+
+CMD [ "npm", "run", "dev" ]

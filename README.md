@@ -1,3 +1,15 @@
+# Docker
+
+for development mode:
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+
+for production mode:
+```bash
+docker compose -f docker-compose.yml up --build
+```
+
 # Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
