@@ -1,23 +1,30 @@
-# Используем официальный образ Node.js в качестве базового
-FROM node:20.15.0
+ARG NODE_VERSION=20.15.0
 
-# Устанавливаем рабочую директорию внутри контейнера
+FROM node:${NODE_VERSION}-slim as base
+
+ARG PORT=3000
+
+ENV NODE_ENV=production
+
 WORKDIR /front
 
-# Копируем файл package.json и package-lock.json для установки зависимостей
+# Build
+FROM base as build
+
 COPY package*.json /front
 
-# Устанавливаем зависимости
-RUN npm install
+RUN npm install --production=false
 
-# Копируем все остальные файлы проекта в контейнер
 COPY . /front
 
-# Собираем приложение Nuxt для production
 RUN npm run build
+RUN npm prune
 
-# Экспонируем порт, который будет использовать приложение
-EXPOSE 3000
+# Run
+FROM base
 
-# Команда по умолчанию для запуска приложения в production-режиме
-CMD ["npm", "run", "start"]
+ENV PORT=$PORT
+
+COPY --from=build /front/.output /front/.output
+
+CMD [ "node", ".output/server/index.mjs" ]
