@@ -37,14 +37,15 @@ const requestParameters = computed(() => ({
   cnt: forecastPeriodSelected.value,
 }));
 
-const { data, status, refresh, error } = await useFetchWeather(path, requestParameters);
+const {
+  data: weatherForecastGroupByDate,
+  status,
+  refresh,
+  error
+} = await useFetchWeather(path, requestParameters);
 
 const isPending = computed(() => status.value === 'pending');
 const isError = computed(() => status.value === 'error');
-
-const weatherForecastGroupByDate = computed(() => {
-  return formattedWeatherForecastGroupByDate(data.value?.contents as WeatherForecastContents);
-});
 
 function update() {
   if (!isPending.value) {

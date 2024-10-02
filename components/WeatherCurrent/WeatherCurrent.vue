@@ -9,7 +9,7 @@ const requestParameters = computed(() => ({
 }));
 
 const {
-  data,
+  data: weatherCurrent,
   refresh,
   status,
   error,
@@ -17,10 +17,6 @@ const {
 
 const isPending = computed(() => status.value === 'pending');
 const isError = computed(() => status.value === 'error');
-
-const weatherCurrent: ComputedRef<WeatherCurrentContents | null> = computed(() => {
-  return formattedWeatherCurrent(data.value?.contents as WeatherCurrentContents);
-});
 
 function update() {
   if(!isPending.value) {
