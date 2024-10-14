@@ -1,4 +1,4 @@
-import type { ProxyResponse, WeatherCoord } from "~/components/Weather/types";
+import type { WeatherCoord } from "~/components/Weather/types";
 import { formattedWeatherForecastGroupByDate, formattedWeatherCurrent } from "~/utils/weather.js";
 
 export async function useFetchWeather(
@@ -7,7 +7,7 @@ export async function useFetchWeather(
 ) {
   const coords: Ref<WeatherCoord> = useState('coords');
 
-  const formattedByPath: Record<string, Function> = {
+  const formattedByPath: Record<string, any> = {
     weather: formattedWeatherCurrent,
     forecast: formattedWeatherForecastGroupByDate,
   };
@@ -18,13 +18,15 @@ export async function useFetchWeather(
     ...coords.value,
   }));
 
-  const response = await useFetch<ProxyResponse>(`/api/weather`, {
+  const response = await useFetch(`/api/weather`, {
     query,
     cache: 'no-cache',
   });
 
+  console.warn('response.error', response.error.value);
+
   return {
     ...response,
-    data: formattedByPath[path](response.data.value?.contents),
+    data: formattedByPath[path](response.data.value),
   };
 }

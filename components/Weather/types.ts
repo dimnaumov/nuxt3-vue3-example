@@ -85,23 +85,10 @@ export interface WeatherCurrentContents {
   timezone: number;
   id: number;
   name: string;
-  cod: number;
+  cod: string;
 }
 
 export type WeatherForecastRequestOptions = WeatherRequestOptions<WeatherParametersForecast>;
-
-export type ProxyResponseStatus = {
-  url: string;
-  content_type: string;
-  http_code: number;
-  response_time: number;
-  content_length: number;
-}
-
-export type ProxyResponse = {
-  contents: WeatherForecastContents | WeatherCurrentContents;
-  status: ProxyResponseStatus;
-}
 
 export type WeatherTabItem = {
   slot: string;
@@ -110,7 +97,7 @@ export type WeatherTabItem = {
 }
 
 export interface WeatherForecastContents {
-  cod: number;
+  cod: string;
   message: number;
   cnt: number;
   list: WeatherItemForecast[];

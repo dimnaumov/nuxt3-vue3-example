@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { WEATHER_CURRENT_REQUEST_OPTIONS } from '~/constants/weather';
-import type { WeatherCurrentContents } from '../Weather/types';
+// import type { WeatherCurrentContents } from '../Weather/types';
 
 const { path, parameters } = WEATHER_CURRENT_REQUEST_OPTIONS;
 
@@ -28,6 +28,10 @@ function update() {
 <template>
   <!-- <pre>
     {{ weatherCurrent }}
+  </pre> -->
+
+  <!-- <pre>
+    {{ error }}
   </pre> -->
 
   <UCard>
