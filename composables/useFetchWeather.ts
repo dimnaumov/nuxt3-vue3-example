@@ -1,4 +1,4 @@
-import type { WeatherCoord } from "~/components/Weather/types";
+import type { WeatherCoord, WeatherCurrentContents, WeatherForecastContents } from "~/components/Weather/types";
 import { formattedWeatherForecastGroupByDate, formattedWeatherCurrent } from "~/utils/weather.js";
 
 export async function useFetchWeather(
@@ -7,7 +7,9 @@ export async function useFetchWeather(
 ) {
   const coords: Ref<WeatherCoord> = useState('coords');
 
-  const formattedByPath: Record<string, any> = {
+  type FormatterFunction = (data: WeatherCurrentContents | WeatherForecastContents) => unknown;
+
+  const formattedByPath: Record<typeof path, FormatterFunction> = {
     weather: formattedWeatherCurrent,
     forecast: formattedWeatherForecastGroupByDate,
   };
@@ -22,8 +24,6 @@ export async function useFetchWeather(
     query,
     cache: 'no-cache',
   });
-
-  console.warn('response.error', response.error.value);
 
   return {
     ...response,

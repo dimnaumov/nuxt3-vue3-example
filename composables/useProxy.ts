@@ -5,16 +5,24 @@ export function useProxy() {
   const proxyFetch = async function(targetUrl: string): Promise<ProxyData> {
     const url = `${PROXY_URL}?url=${encodeURIComponent(targetUrl)}`;
 
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Proxy error response: ${response.status} - ${response.statusText}`);
-    }
-
     try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw createError({
+          status: response.status,
+          statusCode: response.status,
+          statusMessage: response.statusText,
+          statusText: response.statusText,
+          message: `Proxy error: ${response.status} - ${response.statusText}`,
+        });  
+      }
+
       return await response.json();
     } catch (error) {
-      throw new Error(`Failed to parse JSON: ${error}`);
+      console.error('useProxy error details:', error);
+
+      throw error;
     }
   };
 
