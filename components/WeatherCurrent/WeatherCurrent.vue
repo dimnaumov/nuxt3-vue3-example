@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { WEATHER_CURRENT_REQUEST_OPTIONS } from '~/constants/weather';
-// import type { WeatherCurrentContents } from '../Weather/types';
 
 const { path, parameters } = WEATHER_CURRENT_REQUEST_OPTIONS;
 

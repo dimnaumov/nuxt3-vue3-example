@@ -52,7 +52,7 @@ export default defineNuxtConfig({
           usePolling: true,
           interval: 1000,
       },
-    }
+    },
   },
 
   modules: ["@nuxt/eslint", "@nuxt/ui"],
