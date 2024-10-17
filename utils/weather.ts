@@ -92,6 +92,10 @@ export function formattedWeatherForecastGroupByDate(data: WeatherForecastContent
     ...data,
     listByDate: data.list.reduce((result: Record<string, WeatherItemForecast[]>, item: WeatherItemForecast) => {
       const formattedDate = moment(item.dt, 'DD.MM.YYYY HH:mm').format('DD.MM.YYYY');
+      item = {
+        ...item,
+        dt: moment(item.dt, 'DD.MM.YYYY HH:mm').format('H:mm'),
+      };
 
       if (!result[formattedDate]) {
         result[formattedDate] = [item];
