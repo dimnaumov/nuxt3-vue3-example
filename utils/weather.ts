@@ -66,7 +66,7 @@ export function formattedWeatherForecast(data: WeatherForecastContents): Weather
     list: data.list.map((item: WeatherItemForecast) => {
       return {
         ...item,
-        dt: getDateByTimeStampAndOffset(item.dt as number, data.city.timezone, 'HH:mm'),
+        dt: getDateByTimeStampAndOffset(item.dt as number, data.city.timezone, 'DD.MM.YYYY HH:mm'),
         main: {
           ...item.main,
           pressure: Math.round(item.main.sea_level * 0.75006),
@@ -91,7 +91,7 @@ export function formattedWeatherForecastGroupByDate(data: WeatherForecastContent
   return {
     ...data,
     listByDate: data.list.reduce((result: Record<string, WeatherItemForecast[]>, item: WeatherItemForecast) => {
-      const formattedDate = getDateByTimeStampAndOffset(item.dt as number, data.city.timezone, 'DD.MM.YYYY');
+      const formattedDate = moment(item.dt, 'DD.MM.YYYY HH:mm').format('DD.MM.YYYY');
 
       if (!result[formattedDate]) {
         result[formattedDate] = [item];

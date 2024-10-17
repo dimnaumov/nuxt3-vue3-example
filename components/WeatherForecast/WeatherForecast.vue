@@ -3,6 +3,7 @@ import {
   WEATHER_FORECAST_PERIOD_COUNT_IN_DAY,
   WEATHER_FORECAST_REQUEST_OPTIONS,
 } from '~/constants/weather';
+import moment from "moment";
 
 const { path, parameters } = WEATHER_FORECAST_REQUEST_OPTIONS;
 
@@ -110,7 +111,7 @@ function update() {
             class="p-2 rounded-md border border-slate-300 bg-slate-50"
           >
             <p class="flex justify-center font-semibold">
-              {{ itemForecast.dt }}
+              {{ moment(itemForecast.dt, 'DD.MM.YYYY HH:mm').format('H:mm') }}
             </p>
 
             <UDivider class="mb-4" />

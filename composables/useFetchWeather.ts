@@ -1,5 +1,5 @@
 import type { WeatherCoord, WeatherCurrentContents, WeatherForecastContents } from "~/components/Weather/types";
-import { formattedWeatherForecastGroupByDate, formattedWeatherCurrent } from "~/utils/weather.js";
+import { formattedWeatherCurrent } from "~/utils/weather.js";
 
 export async function useFetchWeather(
   path: string,
@@ -11,7 +11,7 @@ export async function useFetchWeather(
 
   const formattedByPath: Record<typeof path, FormatterFunction> = {
     weather: formattedWeatherCurrent,
-    forecast: formattedWeatherForecastGroupByDate,
+    forecast: formattedWeatherForecast,
   };
 
   const query = computed(() => ({
