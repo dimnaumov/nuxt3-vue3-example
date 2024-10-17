@@ -1,5 +1,7 @@
 import { defineEventHandler } from 'h3';
-import { PROXY_URL, WEATHER_SERVICE_BASE_URL } from '~/constants/weather';
+import { useProxy } from '~/composables/useProxy';
+import { WEATHER_SERVICE_BASE_URL } from '~/constants/weather';
+import type { ProxyData } from '~/types/proxy';
 import { getQueryString } from '~/utils/weather';
 
 export default defineEventHandler(async (event) => {
@@ -12,29 +14,23 @@ export default defineEventHandler(async (event) => {
   });
 
   const urlWeather = `${WEATHER_SERVICE_BASE_URL}${path}?${queryString}`;
-
-  const url = `${PROXY_URL}?url=${encodeURIComponent(urlWeather)}`;
-
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-
+  
   try {
-    const data = await response.json();
+    const responseProxy: ProxyData = await useProxy().proxyFetch(urlWeather);
 
-    data.contents = JSON.parse(data.contents);
+    const weatherData = JSON.parse(responseProxy.contents);
     
-    if (
-      data.status.http_code !== 200
-      || parseInt(data.contents.cod) !== 200
-    ) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+    if (parseInt(weatherData.cod) !== 200) {
+      throw createError({
+        statusCode: weatherData.cod,
+        message: `Weather API error with code ${weatherData.cod}!`,
+      });
     }
 
-    return data;
+    return weatherData;
   } catch (error) {
-    throw new Error(`Error parsing JSON: ${error}`);
+    console.error('weather API error', error);
+
+    throw error;
   }
 });

@@ -3,7 +3,6 @@ import {
   WEATHER_FORECAST_PERIOD_COUNT_IN_DAY,
   WEATHER_FORECAST_REQUEST_OPTIONS,
 } from '~/constants/weather';
-import type { WeatherForecastContents } from '../Weather/types';
 
 const { path, parameters } = WEATHER_FORECAST_REQUEST_OPTIONS;
 
@@ -38,12 +37,13 @@ const requestParameters = computed(() => ({
 }));
 
 const {
-  data: weatherForecastGroupByDate,
+  data,
   status,
   refresh,
-  error
+  error,
 } = await useFetchWeather(path, requestParameters);
 
+const weatherForecastGroupByDate = computed(() => formattedWeatherForecastGroupByDate(data.value));
 const isPending = computed(() => status.value === 'pending');
 const isError = computed(() => status.value === 'error');
 

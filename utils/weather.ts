@@ -56,19 +56,17 @@ export function formattedWeatherCurrent(data: WeatherCurrentContents): WeatherCu
   };
 }
 
-export function formattedWeatherForecastGroupByDate(data: WeatherForecastContents): WeatherForecastContentsGroupByDate | null {
+export function formattedWeatherForecast(data: WeatherForecastContents): WeatherForecastContents | null {
   if (!data) {
     return null;
   }
   
   return {
     ...data,
-    listByDate: data.list.reduce((result: Record<string, WeatherItemForecast[]>, item: WeatherItemForecast) => {
-      const formattedDate = getDateByTimeStampAndOffset(item.dt as number, data.city.timezone, 'DD.MM.YYYY');
-
-      const formattedItem = {
+    list: data.list.map((item: WeatherItemForecast) => {
+      return {
         ...item,
-        dt: getDateByTimeStampAndOffset(item.dt as number, data.city.timezone, 'HH:mm'),
+        dt: getDateByTimeStampAndOffset(item.dt as number, data.city.timezone, 'DD.MM.YYYY HH:mm'),
         main: {
           ...item.main,
           pressure: Math.round(item.main.sea_level * 0.75006),
@@ -80,16 +78,32 @@ export function formattedWeatherForecastGroupByDate(data: WeatherForecastContent
           speed: Math.round(item.wind.speed),
           gust: Math.round(item.wind.gust),
         },
+      }
+    }),
+  };
+}
+
+export function formattedWeatherForecastGroupByDate(data: WeatherForecastContents): WeatherForecastContentsGroupByDate | null {
+  if (!data) {
+    return null;
+  }
+  
+  return {
+    ...data,
+    listByDate: data.list.reduce((result: Record<string, WeatherItemForecast[]>, item: WeatherItemForecast) => {
+      const formattedDate = moment(item.dt, 'DD.MM.YYYY HH:mm').format('DD.MM.YYYY');
+      item = {
+        ...item,
+        dt: moment(item.dt, 'DD.MM.YYYY HH:mm').format('H:mm'),
       };
 
       if (!result[formattedDate]) {
-        result[formattedDate] = [formattedItem];
+        result[formattedDate] = [item];
       } else {
-        result[formattedDate].push(formattedItem);
+        result[formattedDate].push(item);
       }
 
       return result;
     }, {}),
   };
 }
-

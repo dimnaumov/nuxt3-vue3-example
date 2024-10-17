@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { WEATHER_CURRENT_REQUEST_OPTIONS } from '~/constants/weather';
-import type { WeatherCurrentContents } from '../Weather/types';
 
 const { path, parameters } = WEATHER_CURRENT_REQUEST_OPTIONS;
 
@@ -26,10 +25,6 @@ function update() {
 </script>
 
 <template>
-  <!-- <pre>
-    {{ weatherCurrent }}
-  </pre> -->
-
   <UCard>
     <template #header>
       <div class="md:flex md:flex-row md:justify-between">
@@ -54,7 +49,7 @@ function update() {
       color="red"
       variant="subtle"
       title="Не удалось получить данные!"
-      :description="error?.message"
+      :description="error?.data.message ?? error?.message"
     />
 
     <div
