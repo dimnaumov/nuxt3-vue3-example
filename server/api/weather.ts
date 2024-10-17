@@ -21,7 +21,6 @@ export default defineEventHandler(async (event) => {
     const weatherData = JSON.parse(responseProxy.contents);
     
     if (parseInt(weatherData.cod) !== 200) {
-      // throw new Error(`Weather API error! Status: ${weatherData.cod}`);
       throw createError({
         statusCode: weatherData.cod,
         message: `Weather API error with code ${weatherData.cod}!`,

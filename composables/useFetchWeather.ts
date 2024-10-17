@@ -27,6 +27,6 @@ export async function useFetchWeather(
 
   return {
     ...response,
-    data: formattedByPath[path](response.data.value),
+    data: computed(() => formattedByPath[path](response.data.value)),
   };
 }
