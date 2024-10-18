@@ -1,6 +1,8 @@
 
 export type WeatherType = 'current' | 'forecast';
 
+export type WeatherPath = 'weather' | 'forecast';
+
 export type WeaterLangCode = 'sq' | 'af' | 'ar' | 'az' | 'eu' | 'be' | 'bg' | 'ca' | 'zh_cn' | 'zh_tw' | 'hr' | 'cz' | 'da' | 'nl' | 'en' | 'fi' | 'fr' | 'gl' | 'de' | 'el' | 'he' | 'hi' | 'hu' | 'is' | 'id' | 'it' | 'ja' | 'kr' | 'ku' | 'la' | 'lt' | 'mk' | 'no' | 'fa' | 'pl' | 'pt' | 'pt_br' | 'ro' | 'ru' | 'sr' | 'sk' | 'sl' | 'sp, es' | 'sv, se' | 'th' | 'tr' | 'ua, uk' | 'vi' | 'zu';
 
 export type WeatherUnits = 'metric' | 'standart' | 'imperial';
@@ -66,7 +68,7 @@ export interface WeatherParametersForecast extends WeatherParameters {
 }
 
 export interface WeatherRequestOptions<T> {
-  path: string;
+  path: WeatherPath;
   parameters: T;
 }
 
