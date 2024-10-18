@@ -41,7 +41,7 @@ const {
   status,
   refresh,
   error,
-} = await useFetchWeather(path, requestParameters);
+} = await useFetchWeather<'forecast'>(path, requestParameters);
 
 const weatherForecastGroupByDate = computed(() => formattedWeatherForecastGroupByDate(data.value));
 const isPending = computed(() => status.value === 'pending');

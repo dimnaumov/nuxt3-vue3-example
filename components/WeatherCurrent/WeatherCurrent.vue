@@ -12,7 +12,7 @@ const {
   refresh,
   status,
   error,
-} = await useFetchWeather(path, requestParameters);
+} = await useFetchWeather<'weather'>(path, requestParameters);
 
 const isPending = computed(() => status.value === 'pending');
 const isError = computed(() => status.value === 'error');
