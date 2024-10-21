@@ -1,6 +1,9 @@
 <script setup lang="ts">
   const coords = useState('coords');
   const ip = useState('ip');
+  const clientIP = useClientIP();
+
+  console.warn('clientIP', clientIP.value);
 
   const userStore = useUserStore();
 
