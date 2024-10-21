@@ -16,6 +16,11 @@ const {
 
 const isPending = computed(() => status.value === 'pending');
 const isError = computed(() => status.value === 'error');
+// useState example
+// const ip: Ref<string> = useState('ip');
+
+// pinia store example
+const { ip } = useUserStore();
 
 function update() {
   if(!isPending.value) {
@@ -30,6 +35,9 @@ function update() {
       <div class="md:flex md:flex-row md:justify-between">
         <p class="text-2xl mb-2 md:mb-0 md:flex md:items-center">
           Погода: {{ weatherCurrent?.name }}
+          <span
+            v-if="ip"
+          >&nbsp;(по ip: {{ ip }})</span>
         </p>
 
         <UButton
