@@ -47,6 +47,12 @@ const weatherForecastGroupByDate = computed(() => formattedWeatherForecastGroupB
 const isPending = computed(() => status.value === 'pending');
 const isError = computed(() => status.value === 'error');
 
+// useState example
+// const ip: Ref<string> = useState('ip');
+
+// pinia store example
+const { ip } = useUserStore();
+
 function update() {
   if (!isPending.value) {
     refresh();
@@ -62,8 +68,14 @@ function update() {
   <UCard>
     <template #header>
       <div class="flex flex-col items-start md:justify-between md:flex-row">
-        <p class="text-2xl mb-2 md:flex md:items-center md:mb-0">
+        <p class="text-2xl mb-2 md:mb-0">
           Погода: {{ weatherForecastGroupByDate?.city.name }}
+          <span
+            v-if="ip"
+            class="block text-sm"
+          >
+            (по ip: {{ ip }})
+          </span>
         </p>
   
         <USelect

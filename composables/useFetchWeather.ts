@@ -1,5 +1,5 @@
 import type {
-  WeatherCoord,
+  // WeatherCoord,
   WeatherCurrentContents,
   WeatherForecastContents,
   WeatherPath,
@@ -17,7 +17,11 @@ export async function useFetchWeather<T extends WeatherPath>(
   path: WeatherPath,
   requestParameters?: ComputedRef<Record<string, unknown>>,
 ) {
-  const coords: Ref<WeatherCoord> = useState('coords');
+  // useState example
+  // const coords: Ref<WeatherCoord> = useState('coords');
+
+  // pinia store example
+  const { coords } = useUserStore();
 
   type FormatterFunction<T> = (data: T) => T | null;
 
@@ -38,7 +42,7 @@ export async function useFetchWeather<T extends WeatherPath>(
   const query = computed(() => ({
     path,
     ...requestParameters?.value,
-    ...coords.value,
+    ...coords,
   }));
 
   const response = await useFetch(`/api/weather`, {
