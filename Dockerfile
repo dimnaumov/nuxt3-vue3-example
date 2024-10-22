@@ -15,8 +15,11 @@ COPY package*.json /front
 
 ENV NODE_OPTIONS="--max-old-space-size=2048"
 
+# Очистка кеша npm
+RUN npm cache clean --force
+
 # RUN npm install
-RUN npm install --omit=dev
+RUN npm install
 
 COPY . /front
 
