@@ -13,7 +13,7 @@ FROM base as build
 
 COPY package*.json /front
 
-RUN npm install --production=false
+RUN npm install
 
 COPY . /front
 
