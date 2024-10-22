@@ -13,7 +13,8 @@ FROM base as build
 
 COPY package*.json /front
 
-RUN npm install
+# RUN npm install
+RUN node --max_old_space_size=2048 $(npm bin)/npm install --omit=dev
 
 COPY . /front
 
