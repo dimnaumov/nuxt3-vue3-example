@@ -19,7 +19,7 @@ ENV NODE_OPTIONS="--max-old-space-size=2048"
 RUN npm cache clean --force
 
 # RUN npm install
-RUN npm install
+RUN npm install --production=false
 
 COPY . /front
 
