@@ -7,7 +7,7 @@ docker compose -f docker-compose.dev.yml up --build
 
 for production mode:
 ```bash
-docker compose -f docker-compose.yml up --build
+docker compose -f docker-compose.yml up --build -d
 ```
 
 # Nuxt 3 Minimal Starter
