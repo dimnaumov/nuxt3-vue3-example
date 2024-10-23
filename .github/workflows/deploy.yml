@@ -31,5 +31,6 @@ jobs:
             docker volume prune -f
 
             git pull origin main
-            docker compose -f docker-compose.yml up --build
+            nohup docker compose -f docker-compose.yml up --build &
+            exit
           EOF
