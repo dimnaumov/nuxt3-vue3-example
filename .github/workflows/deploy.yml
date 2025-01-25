@@ -24,7 +24,7 @@ jobs:
           ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd ${{ secrets.PROJECT_PATH }}
 
-            docker-compose down
+            docker stop $(docker ps -q)
             
             docker image prune -af
             docker system prune -af
