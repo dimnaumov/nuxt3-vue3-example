@@ -1,7 +1,16 @@
 <script setup lang="ts">
-import type { Props } from './types';
+import type { WeatherItem } from '../Weather/types';
 
-defineProps<Props>()
+defineProps({
+  weather: {
+    type: Array as PropType<WeatherItem[]>,
+    required: true,
+  },
+  isDescription: {
+    type: Boolean,
+    default: true,
+  },
+});
 </script>
 
 <template>
@@ -10,7 +19,7 @@ defineProps<Props>()
       v-for="item in weather"
       :key="item.id"
     >
-      <div class="w-12 h-12">
+      <div class="w-12 h-12 shrink-0">
         <img
           class="brightness-75"
           :src="`https://openweathermap.org/img/wn/${item.icon}@2x.png`"
@@ -18,7 +27,10 @@ defineProps<Props>()
         >
       </div>
 
-      <p class="p-1.5 text-sm">
+      <p 
+        v-if="isDescription"
+        class="p-1.5 text-sm"
+      >
         {{ item.description }}
       </p>
     </template>

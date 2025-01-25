@@ -4,6 +4,9 @@ import {
   WEATHER_FORECAST_REQUEST_OPTIONS,
 } from '~/constants/weather';
 
+import { getDayName } from '@/utils/date';
+import type { Breakpoint } from '~/constants/breakpoints';
+
 const { path, parameters } = WEATHER_FORECAST_REQUEST_OPTIONS;
 
 const forecactPeriods = [
@@ -52,6 +55,19 @@ const isError = computed(() => status.value === 'error');
 
 // pinia store example
 const { ip } = useUserStore();
+
+const { breakpoint } = useBreakpoint()
+const weatherDescriptionVisibleByBreakpoint: Record<Breakpoint, boolean> = {
+  sm: false,
+  md: false,
+  lg: true,
+  xl: true,
+  '2xl': true,
+}
+
+function getVisibleWeatherDescription(breakpoint: Breakpoint): boolean {
+  return weatherDescriptionVisibleByBreakpoint[breakpoint]
+}
 
 function update() {
   if (!isPending.value) {
@@ -106,39 +122,50 @@ function update() {
       :description="error?.message"
     />
 
-    <div v-else-if="weatherForecastGroupByDate">
+    <div
+      v-else-if="weatherForecastGroupByDate"
+      class="flex flex-col gap-4"
+    >
       <div
         v-for="(itemForecastList, date) in weatherForecastGroupByDate.listByDate"
         :key="date"
       >
         <UDivider class="mb-4">
-          <span class="text-2xl">{{ date }}</span>
+          <div>
+            <div class="text-2xl">{{ date }}</div>
+            <div>{{ getDayName(date) }}</div>
+          </div>
         </UDivider>
 
-        <div class="mb-4 grid grid-cols-1 gap-2 md:grid-cols-4">
-          <div
-            v-for="itemForecast in itemForecastList"
-            :key="itemForecast.dt"
-            class="p-2 rounded-md border border-slate-300 bg-slate-50"
-          >
-            <p class="flex justify-center font-semibold">
-              {{ itemForecast.dt }}
-            </p>
-
-            <UDivider class="mb-4" />
-  
-            <p class="text-5xl font-medium">
-              {{ Math.round(itemForecast.main.temp) }}°C
-            </p>
-
-            <WeatherDescription :weather="itemForecast.weather" />
-
-            <WeatherWind :wind="itemForecast.wind" />
-
-            <WeatherPressure :grnd_level="itemForecast.main.grnd_level" />
-
-            <WeatherHumidity :humidity="itemForecast.main.humidity" />
+        <div 
+          v-for="itemForecast in itemForecastList"
+          :key="itemForecast.dt"
+          class="grid grid-cols-4 md:grid-cols-5 lg:md:grid-cols-6"
+        >
+          <div class="flex md:text-2xl items-center">
+            {{ itemForecast.dt }}
           </div>
+
+          <div class="flex md:text-2xl font-semibold items-center md:font-medium">
+            {{ Math.round(itemForecast.main.temp) }}°C
+          </div>
+
+          <WeatherDescription
+            :weather="itemForecast.weather"
+            :is-description="getVisibleWeatherDescription(breakpoint)"
+          />
+
+          <WeatherWind :wind="itemForecast.wind" />
+
+          <WeatherPressure
+            class="hidden lg:flex"
+            :grnd_level="itemForecast.main.grnd_level"
+          />
+
+          <WeatherHumidity
+            class="hidden md:flex"
+            :humidity="itemForecast.main.humidity"
+          />
         </div>
       </div>
     </div>

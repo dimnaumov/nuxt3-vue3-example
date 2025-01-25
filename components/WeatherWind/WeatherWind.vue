@@ -23,11 +23,14 @@ const arrowContainerStyles = computed(() => {
     </div>
   
     <div class="flex flex-col justify-center p-1.5 text-sm">
-      <p>
+      <p class="text-nowrap">
         {{ wind.speed }} м/с
       </p>
   
-      <p v-if="isGust">
+      <p
+        v-if="isGust"
+        class="text-nowrap"
+      >
         до {{ wind.gust }} м/с
       </p>
     </div>

@@ -13,7 +13,7 @@ defineProps<Props>();
       />
     </div>
 
-    <div class="p-1.5">
+    <div class="p-1.5 md:text-sm">
       {{ grnd_level }} мм рт. ст.
     </div>
   </div>
