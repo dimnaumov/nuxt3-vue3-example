@@ -33,11 +33,14 @@ function update() {
   <UCard>
     <template #header>
       <div class="md:flex md:flex-row md:justify-between">
-        <p class="text-2xl mb-2 md:mb-0 md:flex md:items-center">
+        <p class="text-2xl mb-2 md:mb-0">
           Погода: {{ weatherCurrent?.name }}
           <span
             v-if="ip"
-          >&nbsp;(по ip: {{ ip }})</span>
+            class="block text-sm"
+          >
+            (по ip: {{ ip }})
+          </span>
         </p>
 
         <UButton
