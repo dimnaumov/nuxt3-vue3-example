@@ -22,8 +22,8 @@ RUN rm -rf .output
 RUN npm cache clean --force
 
 # RUN npm install
-# RUN npm install --production=false
-RUN npm install --omit=dev --no-optional
+RUN npm install --production=false
+# RUN npm install --omit=dev --no-optional
 
 COPY . /front
 
