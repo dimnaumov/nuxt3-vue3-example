@@ -25,6 +25,8 @@ RUN npm install --production=false
 
 COPY . /front
 
+RUN rm -rf .output
+
 RUN npm run build
 RUN npm prune
 
