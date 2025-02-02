@@ -30,6 +30,7 @@
     "@types/geoip-lite": "1.4.4",
     "eslint": "8.57.0",
     "sass": "1.77.8",
+    "typescript": "5.7.3",
     "vite-plugin-eslint2": "4.4.0"
   }
 }
