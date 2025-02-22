@@ -30,8 +30,8 @@ jobs:
         run: yarn add geoip-lite
 
       - name: Обновление базы geoip-lite
-        run: npx geoip-lite updatedb || true
-  
+        run: node node_modules/geoip-lite/scripts/updatedb.js || true
+
       - name: Сборка проекта
         run: yarn build
 
