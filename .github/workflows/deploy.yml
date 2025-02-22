@@ -35,6 +35,16 @@ jobs:
           source: ".output"
           target: "${{ secrets.DEPLOY_PATH }}"
 
+      - name: Создание `.env` на сервере
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.DEPLOY_PATH }}
+            echo "${{ secrets.ENV_FILE }}" > .env
+
       - name: Перезапуск PM2
         uses: appleboy/ssh-action@master
         with:
