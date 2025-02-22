@@ -23,6 +23,9 @@ jobs:
       - name: Установка зависимостей
         run: yarn install --frozen-lockfile
 
+      - name: Debug SSH Connection
+        uses: mxschmitt/action-tmate@v3
+
       - name: Сборка проекта
         run: yarn build
 
