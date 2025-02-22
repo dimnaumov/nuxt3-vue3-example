@@ -32,9 +32,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: |
-            .output
-            node_modules/geoip-lite/data
+          source: ".output"
           target: "${{ secrets.DEPLOY_PATH }}"
 
       - name: Перезапуск PM2
