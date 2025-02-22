@@ -42,7 +42,11 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            export HOME=/root  # Если pm2 работает от root, иначе убери
             cd ${{ secrets.DEPLOY_PATH }}
-            pm2 stop nuxt3-app || true
+            npm install -g pm2
+            ls -la .output/server/index.mjs || exit 1
+            pm2 delete nuxt3-app || true
             pm2 start .output/server/index.mjs --name nuxt3-app
             pm2 save
+            pm2 startup
