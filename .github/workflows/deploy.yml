@@ -23,9 +23,15 @@ jobs:
       - name: Установка зависимостей
         run: yarn install --frozen-lockfile
 
-      - name: Обновление базы geoip-lite
-        run: yarn geoip-lite updatedb || true
+      - name: Проверка установки geoip-lite
+        run: yarn list --pattern geoip-lite
 
+      - name: Установка geoip-lite вручную
+        run: yarn add geoip-lite
+
+      - name: Обновление базы geoip-lite
+        run: npx geoip-lite updatedb || true
+  
       - name: Сборка проекта
         run: yarn build
 
