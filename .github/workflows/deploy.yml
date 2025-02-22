@@ -23,15 +23,6 @@ jobs:
       - name: Установка зависимостей
         run: yarn install --frozen-lockfile
 
-      - name: Проверка установки geoip-lite
-        run: yarn list --pattern geoip-lite
-
-      - name: Установка geoip-lite вручную
-        run: yarn add geoip-lite
-
-      - name: Обновление базы geoip-lite
-        run: node node_modules/geoip-lite/scripts/updatedb.js || true
-
       - name: Сборка проекта
         run: yarn build
 
@@ -41,7 +32,9 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: ".output"
+          source: |
+            .output
+            node_modules/geoip-lite/data
           target: "${{ secrets.DEPLOY_PATH }}"
 
       - name: Перезапуск PM2
