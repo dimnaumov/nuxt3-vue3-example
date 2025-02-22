@@ -10,8 +10,7 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "start": "nuxt start",
-    "postbuild": "shx mkdir -p .output/server/node_modules/geoip-lite/data && cpx node_modules/geoip-lite/data/** .output/server/node_modules/geoip-lite/data/"
+    "start": "nuxt start"
   },
   "dependencies": {
     "@nuxt/ui": "2.17.0",
