@@ -1,8 +1,8 @@
 <template>
-  <NuxtLink
-    to="/"
-    class="font-mono font-normal text-2xl"
-  >
-    dnaumov.site
+  <NuxtLink to="/">
+    <img
+      src="@/assets/logo.svg"
+      alt="Наумов Дмитрий"
+    >
   </NuxtLink>
 </template>
