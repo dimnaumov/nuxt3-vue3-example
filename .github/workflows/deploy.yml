@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - '*'  # Запуск при любом новом теге
+  workflow_dispatch:  # Возможность ручного запуска
 
 jobs:
   deploy:
