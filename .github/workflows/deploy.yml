@@ -55,7 +55,12 @@ jobs:
           SERVER_PATH: "/var/www/nuxt3-vue3-example"
         run: |
           ssh -i private_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
-            export SERVER_PATH="/var/www/nuxt3-vue3-example"  # Экспортируем переменную в сессию
+            export SERVER_PATH="/var/www/nuxt3-vue3-example"
+      
+            # Добавление пути к pm2 в PATH (путь, указанный в which pm2)
+            export PATH=$PATH:/root/.nvm/versions/node/v22.14.0/bin
+      
+            # Перезапуск pm2
             cd $SERVER_PATH
             pm2 stop nuxt-app || true
             pm2 start .output/server/index.mjs --name nuxt-app
