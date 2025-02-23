@@ -37,6 +37,7 @@ jobs:
       
           # Создаем папку, если её нет
           ssh -i private_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
+            export SERVER_PATH="/var/www/nuxt3-vue3-example"
             if [ -z "$SERVER_PATH" ] || [ "$SERVER_PATH" == "/" ]; then
               echo "Ошибка: SERVER_PATH не задан или указывает на корень!"
               exit 1
