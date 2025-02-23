@@ -1,36 +1,58 @@
-name: Deploy
+name: Deploy Nuxt3 App
 
 on:
   push:
     tags:
-      - 'v*'
-  workflow_dispatch:  # Позволяет запускать рабочий процесс вручную
+      - '*'  # Запуск при любом новом теге
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.4
+      - name: Checkout репозиторий
+        uses: actions/checkout@v4
+
+      - name: Установка Node.js
+        uses: actions/setup-node@v4
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          node-version: '20.15.0'
+          cache: 'npm'
 
-      - name: Deploy to server
+      - name: Установка зависимостей
+        run: npm install
+
+      - name: Сборка проекта
+        run: npm run build
+
+      - name: Деплой на сервер
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-          ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd ${{ secrets.PROJECT_PATH }}
+          echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
 
-            docker-compose down
-            
-            docker image prune -af
-            docker system prune -af
-            docker volume prune -f
-
-            git pull origin master
-            nohup docker compose -f docker-compose.yml up --build -d &
-            exit
+          ssh -i private_key -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
+            mkdir -p $DEPLOY_PATH
+            rm -rf $DEPLOY_PATH/*
           EOF
+
+          rsync -avz --delete -e "ssh -i private_key -o StrictHostKeyChecking=no" .output/ $SSH_USER@$SSH_HOST:$DEPLOY_PATH
+
+      - name: Перезапуск PM2
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh -i private_key -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
+            cd $DEPLOY_PATH
+            pm2 stop all || true
+            pm2 start .output/server/index.mjs --name nuxt-app
+            pm2 save
+          EOF
+
+      - name: Очистка временных файлов
+        run: rm -f private_key
