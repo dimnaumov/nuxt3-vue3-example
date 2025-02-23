@@ -3,7 +3,7 @@ name: Deploy Nuxt3 App
 on:
   push:
     tags:
-      - '*'  # Запуск при любом новом теге
+      - '*'  # Запуск при создании нового тега
   workflow_dispatch:  # Возможность ручного запуска
 
 jobs:
@@ -11,49 +11,54 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout репозиторий
+      - name: 📥 Checkout репозитория
         uses: actions/checkout@v4
 
-      - name: Установка Node.js
+      - name: ⚙️ Установка Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.15.0'
+          node-version: 18
           cache: 'npm'
 
-      - name: Установка зависимостей
+      - name: 📦 Установка зависимостей
         run: npm install
 
-      - name: Сборка проекта
+      - name: 🔧 Сборка проекта
         run: npm run build
 
-      - name: Деплой на сервер
+      - name: 🚀 Деплой на сервер через rsync
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          SERVER_USER: ${{ secrets.SSH_USER }}
+          SERVER_HOST: ${{ secrets.SSH_HOST }}
+          SERVER_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
 
-          ssh -i private_key -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
-            mkdir -p $DEPLOY_PATH
-            rm -rf $DEPLOY_PATH/*
+          # Создаем папку, если её нет
+          ssh -i private_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
+            if [ -z "$SERVER_PATH" ] || [ "$SERVER_PATH" == "/" ]; then
+              echo "Ошибка: SERVER_PATH не задан или указывает на корень!"
+              exit 1
+            fi
+            mkdir -p "$SERVER_PATH"
           EOF
 
-          rsync -avz --delete -e "ssh -i private_key -o StrictHostKeyChecking=no" .output/ $SSH_USER@$SSH_HOST:$DEPLOY_PATH
+          # Копируем файлы с удалением устаревших
+          rsync -avz --delete --progress -e "ssh -i private_key -o StrictHostKeyChecking=no" .output/ $SERVER_USER@$SERVER_HOST:$SERVER_PATH
 
-      - name: Перезапуск PM2
+      - name: 🔄 Перезапуск PM2
         env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          SERVER_USER: ${{ secrets.SSH_USER }}
+          SERVER_HOST: ${{ secrets.SSH_HOST }}
+          SERVER_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          ssh -i private_key -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
-            cd $DEPLOY_PATH
-            pm2 stop all || true
+          ssh -i private_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
+            cd $SERVER_PATH
+            pm2 stop nuxt-app || true
             pm2 start .output/server/index.mjs --name nuxt-app
             pm2 save
           EOF
 
-      - name: Очистка временных файлов
+      - name: 🧹 Очистка временных файлов
         run: rm -f private_key
