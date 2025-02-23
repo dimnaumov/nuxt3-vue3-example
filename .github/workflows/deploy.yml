@@ -37,6 +37,7 @@ jobs:
 
           # Создаем папку, если её нет
           ssh -i private_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
+            export SERVER_PATH="/var/www/nuxt3-vue3-example"  # Экспортируем переменную в сессию
             if [ -z "$SERVER_PATH" ] || [ "$SERVER_PATH" == "/" ]; then
               echo "Ошибка: SERVER_PATH не задан или указывает на корень!"
               exit 1
@@ -54,6 +55,7 @@ jobs:
           SERVER_PATH: "/var/www/nuxt3-vue3-example"
         run: |
           ssh -i private_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
+            export SERVER_PATH="/var/www/nuxt3-vue3-example"  # Экспортируем переменную в сессию
             cd $SERVER_PATH
             pm2 stop nuxt-app || true
             pm2 start .output/server/index.mjs --name nuxt-app
