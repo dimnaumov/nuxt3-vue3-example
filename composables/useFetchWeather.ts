@@ -21,7 +21,10 @@ export async function useFetchWeather<T extends WeatherPath>(
   // const coords: Ref<WeatherCoord> = useState('coords');
 
   // pinia store example
-  const { coords } = useUserStore();
+  const userStore = useUserStore();
+  const { coords } = storeToRefs(userStore);
+
+  // const { coords } = useUserStore();
 
   type FormatterFunction<T> = (data: T) => T | null;
 
@@ -42,7 +45,7 @@ export async function useFetchWeather<T extends WeatherPath>(
   const query = computed(() => ({
     path,
     ...requestParameters?.value,
-    ...coords,
+    ...coords.value,
   }));
 
   const response = await useFetch(`/api/weather`, {
@@ -50,8 +53,12 @@ export async function useFetchWeather<T extends WeatherPath>(
     cache: 'no-cache',
   });
 
-  return {
+  const result = {
     ...response,
     data: computed(() => weatherFunctionFormatter[path](response.data.value) as WeatherResponse<T>),
   };
+
+  console.warn('result', result);
+
+  return result;
 }

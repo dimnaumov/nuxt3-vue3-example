@@ -20,7 +20,8 @@ const isError = computed(() => status.value === 'error');
 // const ip: Ref<string> = useState('ip');
 
 // pinia store example
-const { ip } = useUserStore();
+const userStore = useUserStore();
+const { _ip, coordsType, coords } = storeToRefs(userStore);
 
 function update() {
   if(!isPending.value) {
@@ -33,13 +34,16 @@ function update() {
   <UCard>
     <template #header>
       <div class="md:flex md:flex-row md:justify-between">
-        <p class="text-2xl mb-2 md:mb-0">
+        <p
+          v-if="weatherCurrent"
+          class="text-2xl mb-2 md:mb-0"
+        >
           Погода: {{ weatherCurrent?.name }}
           <span
-            v-if="ip"
+            v-if="coords && coordsType"
             class="block text-sm"
           >
-            (по ip: {{ ip }})
+            (по {{ coordsType }}: {{ coords }})
           </span>
         </p>
 
@@ -60,7 +64,7 @@ function update() {
       color="red"
       variant="subtle"
       title="Не удалось получить данные!"
-      :description="error?.data.message ?? error?.message"
+      :description="error?.data?.message ?? error?.message"
     />
 
     <div
