@@ -1,4 +1,5 @@
 import type {
+  WeatherCoord,
   // WeatherCoord,
   WeatherCurrentContents,
   WeatherForecastContents,
@@ -16,15 +17,14 @@ type WeatherResponse<T extends WeatherPath> = WeatherPathMap[T];
 export async function useFetchWeather<T extends WeatherPath>(
   path: WeatherPath,
   requestParameters?: ComputedRef<Record<string, unknown>>,
+  coords?: ComputedRef<WeatherCoord>,
 ) {
   // useState example
   // const coords: Ref<WeatherCoord> = useState('coords');
 
   // pinia store example
-  const userStore = useUserStore();
-  const { coords } = storeToRefs(userStore);
-
-  // const { coords } = useUserStore();
+  // const userStore = useUserStore();
+  // const { coords } = storeToRefs(userStore);
 
   type FormatterFunction<T> = (data: T) => T | null;
 
@@ -42,23 +42,25 @@ export async function useFetchWeather<T extends WeatherPath>(
     forecast: formattedWeatherForecast,
   };
 
-  const query = computed(() => ({
-    path,
-    ...requestParameters?.value,
-    ...coords.value,
-  }));
+  const { data, pending, error, refresh, status } = useAsyncData(
+    `weather-${path}`,
+    () =>
+      $fetch(`/api/weather`, {
+        query: {
+          path,
+          ...unref(requestParameters),
+          ...unref(coords),
+        },
+        cache: "no-cache",
+      })
+        .then((res) => weatherFunctionFormatter[path](res) as WeatherResponse<T>),
+  );
 
-  const response = await useFetch(`/api/weather`, {
-    query,
-    cache: 'no-cache',
-  });
-
-  const result = {
-    ...response,
-    data: computed(() => weatherFunctionFormatter[path](response.data.value) as WeatherResponse<T>),
+  return {
+    data,
+    pending,
+    error,
+    refresh,
+    status,
   };
-
-  console.warn('result', result);
-
-  return result;
 }

@@ -20,7 +20,7 @@ export const useUserStore = defineStore('user', {
 
   getters: {
     coordsType(state): CoordSource {
-      // if (state.coordsByGeolocation) return 'geolocation';
+      if (state.coordsByGeolocation) return 'geolocation';
 
       if (state.coordsByIp) return 'ip';
 
@@ -28,8 +28,8 @@ export const useUserStore = defineStore('user', {
     },
 
     coords(state): WeatherCoord {
-      // return state.coordsByGeolocation || state.coordsByIp || coordDefault;
-      return state.coordsByIp || coordDefault;
+      return state.coordsByGeolocation || state.coordsByIp || coordDefault;
+      // return state.coordsByIp || coordDefault;
     },
   },
 

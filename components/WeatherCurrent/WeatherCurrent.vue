@@ -7,21 +7,23 @@ const requestParameters = computed(() => ({
   ...parameters,
 }));
 
+const userStore = useUserStore();
+const { coordsType, coords } = storeToRefs(userStore);
+
 const {
   data: weatherCurrent,
   refresh,
   status,
   error,
-} = await useFetchWeather<'weather'>(path, requestParameters);
+} = await useFetchWeather<'weather'>(path, requestParameters, coords);
 
 const isPending = computed(() => status.value === 'pending');
 const isError = computed(() => status.value === 'error');
-// useState example
-// const ip: Ref<string> = useState('ip');
 
-// pinia store example
-const userStore = useUserStore();
-const { _ip, coordsType, coords } = storeToRefs(userStore);
+watch(
+  () => coords.value,
+  () => update(),
+);
 
 function update() {
   if(!isPending.value) {

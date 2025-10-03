@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useGeolocation, watchOnce } from '@vueuse/core';
+  import { useGeolocation } from '@vueuse/core';
 
   const coords = useState('coords');
   const ip = useState('ip');
@@ -34,9 +34,9 @@
     }
   });
 
-  watchOnce(
+  watch(
     () => browserCoords.value,
-    (value: Ref<GeolocationCoordinates>) => {      
+    (value: GeolocationCoordinates) => {
       if (value
         && value.accuracy > 0
         && Number.isFinite(value.latitude)
@@ -55,7 +55,6 @@
         }
       }
     },
-    // { immediate: true },
   );
 </script>
 

@@ -32,6 +32,10 @@ const forecactPeriods = [
   },
 ];
 
+// pinia store example
+const userStore = useUserStore();
+const { coordsType, coords } = storeToRefs(userStore);
+
 const forecastPeriodSelected = ref(forecactPeriods[0].value);
 
 const requestParameters = computed(() => ({
@@ -44,17 +48,11 @@ const {
   status,
   refresh,
   error,
-} = await useFetchWeather<'forecast'>(path, requestParameters);
+} = await useFetchWeather<'forecast'>(path, requestParameters, coords);
 
 const weatherForecastGroupByDate = computed(() => formattedWeatherForecastGroupByDate(data.value));
 const isPending = computed(() => status.value === 'pending');
 const isError = computed(() => status.value === 'error');
-
-// useState example
-// const ip: Ref<string> = useState('ip');
-
-// pinia store example
-const { ip } = useUserStore();
 
 const { breakpoint } = useBreakpoint()
 const weatherDescriptionVisibleByBreakpoint: Record<Breakpoint, boolean> = {
@@ -64,6 +62,11 @@ const weatherDescriptionVisibleByBreakpoint: Record<Breakpoint, boolean> = {
   xl: true,
   '2xl': true,
 }
+
+watch(
+  () => forecastPeriodSelected.value,
+  () => update(),
+);
 
 function getVisibleWeatherDescription(breakpoint: Breakpoint): boolean {
   return weatherDescriptionVisibleByBreakpoint[breakpoint]
@@ -77,20 +80,16 @@ function update() {
 </script>
 
 <template>
-  <!-- <pre>
-    {{ weatherForecastGroupByDate }}
-  </pre> -->
-
   <UCard>
     <template #header>
       <div class="flex flex-col items-start md:justify-between md:flex-row">
         <p class="text-2xl mb-2 md:mb-0">
           Погода: {{ weatherForecastGroupByDate?.city.name }}
           <span
-            v-if="ip"
+            v-if="coords && coordsType"
             class="block text-sm"
           >
-            (по ip: {{ ip }})
+            (по {{ coordsType }}: {{ coords }})
           </span>
         </p>
   
