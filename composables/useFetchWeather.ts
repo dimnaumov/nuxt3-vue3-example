@@ -1,3 +1,4 @@
+import { server } from "typescript";
 import type {
   WeatherCoord,
   // WeatherCoord,
@@ -44,16 +45,24 @@ export async function useFetchWeather<T extends WeatherPath>(
 
   const { data, pending, error, refresh, status } = useAsyncData(
     `weather-${path}`,
-    () =>
-      $fetch(`/api/weather`, {
-        query: {
-          path,
-          ...unref(requestParameters),
-          ...unref(coords),
-        },
-        cache: "no-cache",
-      })
-        .then((res) => weatherFunctionFormatter[path](res) as WeatherResponse<T>),
+    async () => {
+      try {
+        const result = await $fetch(`/api/weather`, {
+          query: {
+            path,
+            ...unref(requestParameters),
+            ...unref(coords),
+          },
+          cache: "no-cache",
+        });
+
+        return weatherFunctionFormatter[path](result) as WeatherResponse<T>;
+      } catch (error) {
+        console.error('Ошибка загрузки:', error);
+
+        throw error;
+      }
+    },
   );
 
   return {
